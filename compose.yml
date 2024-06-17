@@ -1,0 +1,36 @@
+services:
+  web:
+    container_name: docker-php
+    image: php-custom:latest
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./www:/var/www/html
+    networks:
+      - wordpress
+
+  mysql:
+    container_name: docker-mysql
+    image: mariadb:lts
+    restart: always
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: username
+      MARIADB_PASSWORD: password
+      MARIADB_ROOT_PASSWORD: root_password
+    ports:
+      - "3306:3306"
+    networks:
+      - wordpress
+
+volumes:
+  mysql:
+
+networks:
+  wordpress:
